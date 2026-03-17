@@ -47,19 +47,22 @@
             p.x += p.vx;
             p.y += p.vy;
 
-            // Mouse interaction — subtle attraction
+            // Mouse interaction — strong magnetic pull
             const dx = mouseX - p.x;
             const dy = mouseY - p.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
+            const mouseRadius = 300;
 
-            if (dist < 200) {
-                p.vx += dx * 0.00005;
-                p.vy += dy * 0.00005;
+            if (dist < mouseRadius && dist > 0) {
+                const force = (mouseRadius - dist) / mouseRadius;
+                const angle = Math.atan2(dy, dx);
+                p.vx += Math.cos(angle) * force * 0.8;
+                p.vy += Math.sin(angle) * force * 0.8;
             }
 
             // Damping
-            p.vx *= 0.999;
-            p.vy *= 0.999;
+            p.vx *= 0.92;
+            p.vy *= 0.92;
 
             // Wrap around
             if (p.x < 0) p.x = canvas.width;
@@ -74,20 +77,27 @@
             ctx.globalAlpha = p.opacity;
             ctx.fill();
 
-            // Draw connections
+            // Draw connections — stronger near mouse
             for (let j = i + 1; j < particles.length; j++) {
                 const p2 = particles[j];
                 const connDx = p.x - p2.x;
                 const connDy = p.y - p2.y;
                 const connDist = Math.sqrt(connDx * connDx + connDy * connDy);
 
-                if (connDist < 120) {
+                // Wider connection radius near mouse
+                const midX = (p.x + p2.x) / 2;
+                const midY = (p.y + p2.y) / 2;
+                const mouseDistToMid = Math.sqrt((mouseX - midX) * (mouseX - midX) + (mouseY - midY) * (mouseY - midY));
+                const maxConn = mouseDistToMid < 250 ? 200 : 120;
+                const maxOpacity = mouseDistToMid < 250 ? 0.4 : 0.15;
+
+                if (connDist < maxConn) {
                     ctx.beginPath();
                     ctx.moveTo(p.x, p.y);
                     ctx.lineTo(p2.x, p2.y);
                     ctx.strokeStyle = p.color;
-                    ctx.globalAlpha = (1 - connDist / 120) * 0.15;
-                    ctx.lineWidth = 0.5;
+                    ctx.globalAlpha = (1 - connDist / maxConn) * maxOpacity;
+                    ctx.lineWidth = mouseDistToMid < 250 ? 1 : 0.5;
                     ctx.stroke();
                 }
             }
@@ -275,4 +285,154 @@
             }
         });
     });
+
+    // --- 3D Tilt Effect on Cards ---
+    const tiltCards = document.querySelectorAll(".skill-card, .project-card");
+
+    tiltCards.forEach((card) => {
+        card.addEventListener("mousemove", (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -8;
+            const rotateY = ((x - centerX) / centerX) * 8;
+
+            card.style.transform = "perspective(1000px) rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) translateY(-4px)";
+        });
+
+        card.addEventListener("mouseleave", () => {
+            card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)";
+        });
+    });
+
+    // --- Magnetic Buttons ---
+    const magneticBtns = document.querySelectorAll(".btn-magnetic");
+
+    magneticBtns.forEach((btn) => {
+        btn.addEventListener("mousemove", (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            btn.style.transform = "translate(" + (x * 0.3) + "px, " + (y * 0.3) + "px)";
+        });
+
+        btn.addEventListener("mouseleave", () => {
+            btn.style.transform = "translate(0px, 0px)";
+        });
+    });
+
+    // --- Konami Code Easter Egg ---
+    const konamiCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+    let konamiIndex = 0;
+
+    const easterEggLines = [
+        { text: "$ sudo access --granted", cls: "ee-accent", delay: 0 },
+        { text: "Initializing secure connection...", cls: "ee-warn", delay: 400 },
+        { text: "████████████████████ 100%", cls: "ee-success", delay: 800 },
+        { text: "", cls: "", delay: 1200 },
+        { text: "┌──────────────────────────────────────┐", cls: "ee-accent", delay: 1300 },
+        { text: "│  WELCOME TO THE INNER SANCTUM        │", cls: "ee-accent", delay: 1500 },
+        { text: "│  You found the secret terminal!       │", cls: "ee-pink", delay: 1700 },
+        { text: "│                                      │", cls: "", delay: 1800 },
+        { text: "│  > Name: Ozan Ramazan Kalkan         │", cls: "", delay: 1900 },
+        { text: "│  > Role: Full Stack Hacker-Developer  │", cls: "", delay: 2100 },
+        { text: "│  > Status: Building cool stuff 24/7   │", cls: "ee-success", delay: 2300 },
+        { text: "│  > Secret: Powered by mass amounts    │", cls: "ee-warn", delay: 2500 },
+        { text: "│           of coffee & curiosity ☕     │", cls: "ee-warn", delay: 2700 },
+        { text: "│                                      │", cls: "", delay: 2800 },
+        { text: "│  Press ESC to return to reality...    │", cls: "ee-pink", delay: 3000 },
+        { text: "└──────────────────────────────────────┘", cls: "ee-accent", delay: 3200 },
+    ];
+
+    const showEasterEgg = () => {
+        const overlay = document.getElementById("easterEgg");
+        const body = document.getElementById("easterEggBody");
+        body.innerHTML = "";
+        overlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+        easterEggLines.forEach((line) => {
+            setTimeout(() => {
+                const div = document.createElement("div");
+                div.className = "easter-egg-line terminal-output " + line.cls;
+                div.textContent = line.text;
+                div.style.animationDelay = "0s";
+                body.appendChild(div);
+                body.scrollTop = body.scrollHeight;
+            }, line.delay);
+        });
+    };
+
+    const hideEasterEgg = () => {
+        const overlay = document.getElementById("easterEgg");
+        overlay.classList.remove("active");
+        document.body.style.overflow = "";
+    };
+
+    document.addEventListener("keydown", (e) => {
+        if (document.getElementById("easterEgg").classList.contains("active")) {
+            if (e.key === "Escape") {
+                hideEasterEgg();
+            }
+            return;
+        }
+
+        if (e.keyCode === konamiCode[konamiIndex]) {
+            konamiIndex++;
+            if (konamiIndex === konamiCode.length) {
+                konamiIndex = 0;
+                showEasterEgg();
+            }
+        } else {
+            konamiIndex = 0;
+        }
+    });
+
+    document.getElementById("easterEgg").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) {
+            hideEasterEgg();
+        }
+    });
+
+    // --- Contact Form ---
+    const contactForm = document.getElementById("contactForm");
+    const formResult = document.getElementById("formResult");
+    const submitBtn = document.getElementById("submitBtn");
+
+    if (contactForm) {
+        contactForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.querySelector("span").textContent = "Sending...";
+            formResult.textContent = "";
+            formResult.className = "form-result";
+
+            try {
+                const formData = new FormData(contactForm);
+                const response = await fetch("https://api.web3forms.com/submit", {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    formResult.textContent = "Message sent successfully! I'll get back to you soon.";
+                    formResult.classList.add("success");
+                    contactForm.reset();
+                } else {
+                    formResult.textContent = "Something went wrong. Please try again or email directly.";
+                    formResult.classList.add("error");
+                }
+            } catch (err) {
+                formResult.textContent = "Network error. Please try again or email directly.";
+                formResult.classList.add("error");
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.querySelector("span").textContent = "Send Message";
+        });
+    }
 })();
