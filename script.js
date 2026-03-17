@@ -412,13 +412,14 @@
 
             try {
                 const formData = new FormData(contactForm);
-                const response = await fetch("https://api.web3forms.com/submit", {
+                const response = await fetch("https://formsubmit.co/ajax/info@orklabs.io", {
                     method: "POST",
-                    body: formData
+                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                    body: JSON.stringify(Object.fromEntries(formData))
                 });
                 const data = await response.json();
 
-                if (data.success) {
+                if (data.success === "true" || data.success === true) {
                     formResult.textContent = "Message sent successfully! I'll get back to you soon.";
                     formResult.classList.add("success");
                     contactForm.reset();
