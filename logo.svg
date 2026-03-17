@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6c5ce7;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#00cec9;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="codeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a29bfe;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#55efc4;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="innerGlow" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" style="stop-color:#6c5ce7;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#00cec9;stop-opacity:0.1"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer glow circle -->
+  <circle cx="100" cy="100" r="90" fill="none" stroke="url(#shieldGrad)" stroke-width="0.5" opacity="0.3" filter="url(#softGlow)"/>
+
+  <!-- Shield shape - hexagonal/geometric security shield -->
+  <path d="M100 18 L168 52 L168 108 C168 142 140 172 100 188 C60 172 32 142 32 108 L32 52 Z"
+        fill="none" stroke="url(#shieldGrad)" stroke-width="2.5" stroke-linejoin="round"
+        filter="url(#glow)"/>
+
+  <!-- Inner shield fill -->
+  <path d="M100 18 L168 52 L168 108 C168 142 140 172 100 188 C60 172 32 142 32 108 L32 52 Z"
+        fill="url(#innerGlow)" opacity="0.5"/>
+
+  <!-- Circuit board lines - left side -->
+  <g stroke="#6c5ce7" stroke-width="1" opacity="0.4">
+    <line x1="50" y1="70" x2="50" y2="90"/>
+    <line x1="50" y1="90" x2="60" y2="90"/>
+    <circle cx="50" cy="70" r="2" fill="#6c5ce7"/>
+    <circle cx="60" cy="90" r="1.5" fill="#6c5ce7"/>
+
+    <line x1="45" y1="110" x2="55" y2="110"/>
+    <line x1="55" y1="110" x2="55" y2="125"/>
+    <circle cx="45" cy="110" r="1.5" fill="#6c5ce7"/>
+    <circle cx="55" cy="125" r="2" fill="#6c5ce7"/>
+  </g>
+
+  <!-- Circuit board lines - right side -->
+  <g stroke="#00cec9" stroke-width="1" opacity="0.4">
+    <line x1="150" y1="70" x2="150" y2="90"/>
+    <line x1="140" y1="90" x2="150" y2="90"/>
+    <circle cx="150" cy="70" r="2" fill="#00cec9"/>
+    <circle cx="140" cy="90" r="1.5" fill="#00cec9"/>
+
+    <line x1="145" y1="110" x2="155" y2="110"/>
+    <line x1="145" y1="110" x2="145" y2="125"/>
+    <circle cx="155" cy="110" r="1.5" fill="#00cec9"/>
+    <circle cx="145" cy="125" r="2" fill="#00cec9"/>
+  </g>
+
+  <!-- Code brackets < > wrapping the center -->
+  <g filter="url(#glow)">
+    <!-- Left bracket < -->
+    <path d="M78 82 L60 103 L78 124" fill="none" stroke="url(#codeGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Right bracket > -->
+    <path d="M122 82 L140 103 L122 124" fill="none" stroke="url(#codeGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Center slash / -->
+  <line x1="108" y1="78" x2="92" y2="128" stroke="url(#shieldGrad)" stroke-width="3" stroke-linecap="round" filter="url(#glow)"/>
+
+  <!-- Lock keyhole at top of shield -->
+  <g filter="url(#glow)" opacity="0.8">
+    <circle cx="100" cy="48" r="6" fill="none" stroke="url(#shieldGrad)" stroke-width="1.5"/>
+    <line x1="100" y1="54" x2="100" y2="60" stroke="url(#shieldGrad)" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Small decorative dots -->
+  <circle cx="100" cy="155" r="2" fill="url(#shieldGrad)" opacity="0.6"/>
+  <circle cx="90" cy="150" r="1" fill="#6c5ce7" opacity="0.4"/>
+  <circle cx="110" cy="150" r="1" fill="#00cec9" opacity="0.4"/>
+</svg>
