@@ -812,6 +812,7 @@ body:hover #cursorGlow {
 .testforge-icon { background: rgba(108, 92, 231, 0.12); color: var(--accent-1); }
 .filehub-icon { background: rgba(0, 206, 201, 0.12); color: var(--accent-2); }
 .enterprise-icon { background: rgba(253, 121, 168, 0.12); color: var(--accent-3); }
+.batterylimit-icon { background: rgba(85, 239, 130, 0.12); color: #55ef82; }
 .security-project-icon { background: rgba(253, 203, 110, 0.12); color: var(--accent-4); }
 
 .project-card h3 {
