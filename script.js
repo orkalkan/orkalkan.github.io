@@ -397,28 +397,55 @@
     });
 
     // --- Contact Form ---
-    // Opens the visitor's own email client with a pre-filled message.
-    // No third-party service, no tracking, guaranteed to work everywhere.
+    // Posts the message to our self-hosted relay on the Pi server,
+    // which forwards it via local Postfix to info@orklabs.io.
+    const CONTACT_ENDPOINT = "https://contact.orklabs.io/contact";
     const contactForm = document.getElementById("contactForm");
     const formResult = document.getElementById("formResult");
+    const submitBtn = document.getElementById("submitBtn");
 
-    if (contactForm) {
-        contactForm.addEventListener("submit", (e) => {
+    if (contactForm && submitBtn) {
+        contactForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const name = contactForm.name.value.trim();
-            const email = contactForm.email.value.trim();
-            const message = contactForm.message.value.trim();
+            const submitLabel = submitBtn.querySelector("span");
+            submitBtn.disabled = true;
+            submitLabel.textContent = "Sending...";
+            formResult.textContent = "";
+            formResult.className = "form-result";
 
-            const subject = encodeURIComponent(`New message from ${name}`);
-            const body = encodeURIComponent(
-                `Hi Ozan,\n\n${message}\n\n—\nFrom: ${name}\nReply to: ${email}`
-            );
-            window.location.href = `mailto:info@orklabs.io?subject=${subject}&body=${body}`;
+            const payload = {
+                name: contactForm.name.value.trim(),
+                email: contactForm.email.value.trim(),
+                message: contactForm.message.value.trim(),
+                website: contactForm.website.value
+            };
 
-            if (formResult) {
-                formResult.textContent = "Your email client should open now. If it doesn't, write directly to info@orklabs.io";
-                formResult.className = "form-result success";
+            try {
+                const response = await fetch(CONTACT_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json().catch(() => ({}));
+
+                if (response.ok && result.data && result.data.sent) {
+                    formResult.textContent = "Message sent. I'll get back to you soon.";
+                    formResult.classList.add("success");
+                    contactForm.reset();
+                } else {
+                    const errorMessage = result.error && result.error.message
+                        ? result.error.message
+                        : "Something went wrong. Please try again.";
+                    formResult.textContent = errorMessage;
+                    formResult.classList.add("error");
+                }
+            } catch (err) {
+                formResult.textContent = "Could not reach the server. Please email info@orklabs.io directly.";
+                formResult.classList.add("error");
             }
+
+            submitBtn.disabled = false;
+            submitLabel.textContent = "Send Message";
         });
     }
 })();
