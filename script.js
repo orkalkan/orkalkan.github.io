@@ -397,42 +397,16 @@
     });
 
     // --- Contact Form ---
+    // Uses native form submission to FormSubmit.co.
+    // First submission triggers an email confirmation to info@orklabs.io;
+    // after confirming, all subsequent submissions deliver directly.
     const contactForm = document.getElementById("contactForm");
-    const formResult = document.getElementById("formResult");
     const submitBtn = document.getElementById("submitBtn");
 
-    if (contactForm) {
-        contactForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
+    if (contactForm && submitBtn) {
+        contactForm.addEventListener("submit", () => {
             submitBtn.disabled = true;
             submitBtn.querySelector("span").textContent = "Sending...";
-            formResult.textContent = "";
-            formResult.className = "form-result";
-
-            try {
-                const formData = new FormData(contactForm);
-                const response = await fetch("https://formsubmit.co/ajax/info@orklabs.io", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
-                    body: JSON.stringify(Object.fromEntries(formData))
-                });
-                const data = await response.json();
-
-                if (data.success === "true" || data.success === true) {
-                    formResult.textContent = "Message sent successfully! I'll get back to you soon.";
-                    formResult.classList.add("success");
-                    contactForm.reset();
-                } else {
-                    formResult.textContent = "Something went wrong. Please try again or email directly.";
-                    formResult.classList.add("error");
-                }
-            } catch (err) {
-                formResult.textContent = "Network error. Please try again or email directly.";
-                formResult.classList.add("error");
-            }
-
-            submitBtn.disabled = false;
-            submitBtn.querySelector("span").textContent = "Send Message";
         });
     }
 })();
