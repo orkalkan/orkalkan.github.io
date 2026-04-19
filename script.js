@@ -397,16 +397,28 @@
     });
 
     // --- Contact Form ---
-    // Uses native form submission to FormSubmit.co.
-    // First submission triggers an email confirmation to info@orklabs.io;
-    // after confirming, all subsequent submissions deliver directly.
+    // Opens the visitor's own email client with a pre-filled message.
+    // No third-party service, no tracking, guaranteed to work everywhere.
     const contactForm = document.getElementById("contactForm");
-    const submitBtn = document.getElementById("submitBtn");
+    const formResult = document.getElementById("formResult");
 
-    if (contactForm && submitBtn) {
-        contactForm.addEventListener("submit", () => {
-            submitBtn.disabled = true;
-            submitBtn.querySelector("span").textContent = "Sending...";
+    if (contactForm) {
+        contactForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const name = contactForm.name.value.trim();
+            const email = contactForm.email.value.trim();
+            const message = contactForm.message.value.trim();
+
+            const subject = encodeURIComponent(`New message from ${name}`);
+            const body = encodeURIComponent(
+                `Hi Ozan,\n\n${message}\n\n—\nFrom: ${name}\nReply to: ${email}`
+            );
+            window.location.href = `mailto:info@orklabs.io?subject=${subject}&body=${body}`;
+
+            if (formResult) {
+                formResult.textContent = "Your email client should open now. If it doesn't, write directly to info@orklabs.io";
+                formResult.className = "form-result success";
+            }
         });
     }
 })();
