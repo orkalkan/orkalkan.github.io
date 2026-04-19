@@ -132,10 +132,9 @@
     const typedElement = document.getElementById("typedText");
     const phrases = [
         "SAP Enterprise Systems",
-        "iOS Applications",
+        "SaaS Products",
         "Security Tools",
         "Test Automation Platforms",
-        "SaaS Products",
         "Fiori Applications",
         "Full Stack Solutions"
     ];
