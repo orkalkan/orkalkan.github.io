@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fira File Transfer Demo</title>
+  <script
+    id="sap-ui-bootstrap"
+    src="https://ui5.sap.com/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_horizon"
+    data-sap-ui-libs="sap.m,sap.ui.layout"
+    data-sap-ui-compatVersion="edge"
+    data-sap-ui-async="true"
+    data-sap-ui-frameOptions="allow"
+  ></script>
+  <style>
+    html, body, #content {
+      height: 100%;
+      margin: 0;
+      background:
+        radial-gradient(circle at top right, rgba(77, 124, 255, 0.12), transparent 24rem),
+        linear-gradient(180deg, #f6f8fc 0%, #eef3fb 100%);
+      font-family: "Inter", "Segoe UI", sans-serif;
+    }
+
+    .demoShell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 2rem 1rem 3rem;
+    }
+
+    .heroCard {
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .heroHeader {
+      padding: 2rem;
+      background:
+        radial-gradient(circle at top right, rgba(14, 165, 233, 0.18), transparent 20rem),
+        linear-gradient(135deg, rgba(30, 41, 59, 0.98), rgba(51, 65, 85, 0.96));
+      color: #fff;
+    }
+
+    .heroHeader h1 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+    }
+
+    .heroHeader p {
+      margin: 0.85rem 0 0;
+      max-width: 52rem;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .statusPill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 1rem;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .cardHintGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1.4rem;
+    }
+
+    .cardHint {
+      border-radius: 18px;
+      padding: 1rem 1.1rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .cardHint strong {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.95rem;
+    }
+
+    .cardHint span {
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .nativeUploadInput {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 16px;
+      border: 1px dashed rgba(37, 99, 235, 0.35);
+      background: linear-gradient(180deg, rgba(239, 246, 255, 0.9), rgba(239, 246, 255, 0.55));
+      color: #0f172a;
+      box-sizing: border-box;
+    }
+
+    .nativeUploadInput:hover {
+      border-color: rgba(37, 99, 235, 0.58);
+      background: linear-gradient(180deg, rgba(219, 234, 254, 0.95), rgba(239, 246, 255, 0.7));
+    }
+
+    .previewPanel {
+      min-height: 8rem;
+      border-radius: 16px;
+      padding: 1rem;
+      background: linear-gradient(180deg, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.95));
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      font-family: "SFMono-Regular", "Menlo", monospace;
+      font-size: 0.85rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      color: #0f172a;
+    }
+
+    .stepList {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .stepItem {
+      border-radius: 16px;
+      padding: 0.95rem 1rem;
+      background: rgba(248, 250, 252, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .stepItem strong {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: #0f172a;
+    }
+
+    .stepItem span {
+      color: #475569;
+      line-height: 1.45;
+      font-size: 0.92rem;
+    }
+  </style>
+  <script>
+    sap.ui.getCore().attachInit(function () {
+      "use strict";
+
+      var oModel = new sap.ui.model.json.JSONModel({
+        upload: {
+          summary: "No file uploaded yet",
+          meta: "Choose a file to see its name, type, size, and preview.",
+          preview: "Preview will appear here after upload."
+        },
+        downloads: {
+          lastAction: "No download started yet",
+          lastFileName: "—",
+          lastFileSize: "—"
+        }
+      });
+
+      sap.ui.getCore().setModel(oModel);
+
+      var formatBytes = function (bytes) {
+        if (!Number.isFinite(bytes) || bytes <= 0) return "0 B";
+        var units = ["B", "KB", "MB", "GB"];
+        var value = bytes;
+        var index = 0;
+        while (value >= 1024 && index < units.length - 1) {
+          value /= 1024;
+          index++;
+        }
+        return (index === 0 ? value : value.toFixed(2)) + " " + units[index];
+      };
+
+      var updateUploadState = function (file, previewText) {
+        oModel.setProperty("/upload/summary", "Uploaded: " + file.name);
+        oModel.setProperty(
+          "/upload/meta",
+          [
+            "Type: " + (file.type || "unknown"),
+            "Size: " + formatBytes(file.size),
+            "Last modified: " + new Date(file.lastModified).toLocaleString()
+          ].join(" • ")
+        );
+        oModel.setProperty("/upload/preview", previewText || "Binary file uploaded. No text preview available.");
+        window.__lastUploadedFileName = file.name;
+        window.__lastUploadedFileSize = file.size;
+        window.__lastUploadedFileType = file.type || "unknown";
+        window.__fileUploadSummary = {
+          name: file.name,
+          size: file.size,
+          type: file.type || "unknown"
+        };
+      };
+
+      var attachFileInput = function () {
+        var input = document.getElementById("demoUploadInput");
+        if (!input) return;
+        input.addEventListener("change", function (event) {
+          var file = event.target.files && event.target.files[0];
+          if (!file) return;
+
+          if (file.type.startsWith("text/") || /\.(txt|csv|json|xml|md|js|ts|html|css)$/i.test(file.name)) {
+            file.text().then(function (text) {
+              updateUploadState(file, text.slice(0, 4000));
+            }).catch(function () {
+              updateUploadState(file, "Uploaded file preview could not be read.");
+            });
+            return;
+          }
+
+          updateUploadState(file, "Binary file uploaded. Preview intentionally omitted.");
+        });
+      };
+
+      var markDownload = function (fileName, blob) {
+        oModel.setProperty("/downloads/lastAction", "Downloaded " + fileName);
+        oModel.setProperty("/downloads/lastFileName", fileName);
+        oModel.setProperty("/downloads/lastFileSize", formatBytes(blob.size));
+        window.__lastDownloadedFileName = fileName;
+        window.__lastDownloadedFileSize = blob.size;
+      };
+
+      var triggerBlobDownload = function (fileName, mimeType, content) {
+        var blob = new Blob([content], { type: mimeType });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+        markDownload(fileName, blob);
+      };
+
+      var oNativeUpload = new sap.ui.core.HTML("fileTransferUploadHtml", {
+        content:
+          '<div>' +
+            '<input id="demoUploadInput" class="nativeUploadInput" aria-label="Upload File" type="file" />' +
+          '</div>',
+        afterRendering: attachFileInput
+      });
+
+      var oPage = new sap.m.Page("fileTransferDemoPage", {
+        title: "Fira File Transfer Demo",
+        content: [
+          new sap.ui.core.HTML({
+            content:
+              '<div class="demoShell">' +
+                '<div class="heroCard">' +
+                  '<div class="heroHeader">' +
+                    '<div class="statusPill">Manual Validation Playground</div>' +
+                    '<h1>Upload and Download Testing in One Place</h1>' +
+                    '<p>This page is intentionally built for Fira recording and running. You can upload a real file from your machine, verify the captured metadata and preview, then trigger different download styles without touching any backend.</p>' +
+                    '<div class="cardHintGrid">' +
+                      '<div class="cardHint"><strong>Upload</strong><span>Use the native file input to record a portable upload asset.</span></div>' +
+                      '<div class="cardHint"><strong>Anchor Download</strong><span>Download a deterministic sample file through a normal link click.</span></div>' +
+                      '<div class="cardHint"><strong>Generated Download</strong><span>Trigger a JavaScript-generated blob download to validate runtime waiting and saving.</span></div>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+              '</div>'
+          }),
+          new sap.ui.layout.Grid({
+            defaultSpan: "L6 M12 S12",
+            width: "100%",
+            content: [
+              new sap.m.Panel({
+                headerText: "Upload Lab",
+                content: [
+                  new sap.m.Text({
+                    text: "Choose any file. Text-like files will show a preview so you can confirm capture visually before using the scenario."
+                  }).addStyleClass("sapUiSmallMarginBottom"),
+                  oNativeUpload,
+                  new sap.m.ObjectStatus("uploadSummaryStatus", {
+                    text: "{/upload/summary}",
+                    state: "Success"
+                  }).addStyleClass("sapUiSmallMarginTop"),
+                  new sap.m.Text("uploadMetaText", {
+                    text: "{/upload/meta}"
+                  }).addStyleClass("sapUiTinyMarginTop"),
+                  new sap.ui.core.HTML({
+                    content:
+                      '<div class="sapUiSmallMarginTop">' +
+                        '<div class="previewPanel" id="uploadPreviewPanel"></div>' +
+                      '</div>',
+                    afterRendering: function () {
+                      var panel = document.getElementById("uploadPreviewPanel");
+                      if (panel) {
+                        panel.textContent = oModel.getProperty("/upload/preview");
+                      }
+                      oModel.attachPropertyChange(function () {
+                        var current = document.getElementById("uploadPreviewPanel");
+                        if (current) {
+                          current.textContent = oModel.getProperty("/upload/preview");
+                        }
+                      });
+                    }
+                  })
+                ]
+              }).addStyleClass("sapUiResponsiveMargin"),
+              new sap.m.Panel({
+                headerText: "Download Lab",
+                content: [
+                  new sap.m.Text({
+                    text: "Try both a static download link and generated file buttons. Fira should wait for the download event and store the resulting file in its controlled download directory."
+                  }).addStyleClass("sapUiSmallMarginBottom"),
+                  new sap.m.VBox({
+                    items: [
+                      new sap.m.Link("downloadStaticLink", {
+                        text: "Download static sample TXT",
+                        href: "/file-transfer-demo-sample.txt",
+                        target: "_blank"
+                      }).addStyleClass("sapUiTinyMarginBottom"),
+                      new sap.m.Button("downloadJsonBtn", {
+                        text: "Download generated JSON",
+                        type: "Emphasized",
+                        press: function () {
+                          triggerBlobDownload(
+                            "fira-sample-export.json",
+                            "application/json",
+                            JSON.stringify({
+                              app: "Fira",
+                              type: "generated-json",
+                              generatedAt: new Date().toISOString(),
+                              note: "This file was generated entirely in the browser."
+                            }, null, 2)
+                          );
+                        }
+                      }).addStyleClass("sapUiTinyMarginBottom"),
+                      new sap.m.Button("downloadExcelBtn", {
+                        text: "Download Excel-compatible XLS",
+                        press: function () {
+                          triggerBlobDownload(
+                            "fira-sample-export.xls",
+                            "application/vnd.ms-excel;charset=utf-8",
+                            [
+                              "ID\tTitle\tStatus\tOwner\tPoints",
+                              "KB-101\tCreate drag-drop fix\tDone\tOrk\t5",
+                              "KB-201\tImprove confidence demo\tIn Progress\tFira\t8",
+                              "KB-301\tValidate upload asset replay\tPlanned\tQA\t3"
+                            ].join("\n")
+                          );
+                        }
+                      })
+                    ]
+                  }),
+                  new sap.m.List({
+                    showSeparators: "Inner",
+                    items: [
+                      new sap.m.StandardListItem({
+                        title: "Last download action",
+                        description: "{/downloads/lastAction}"
+                      }),
+                      new sap.m.StandardListItem({
+                        title: "Last file name",
+                        description: "{/downloads/lastFileName}"
+                      }),
+                      new sap.m.StandardListItem({
+                        title: "Last file size",
+                        description: "{/downloads/lastFileSize}"
+                      })
+                    ]
+                  }).addStyleClass("sapUiSmallMarginTop")
+                ]
+              }).addStyleClass("sapUiResponsiveMargin")
+            ]
+          }),
+          new sap.ui.core.HTML({
+            content:
+              '<div class="demoShell">' +
+                '<div class="stepList">' +
+                  '<div class="stepItem"><strong>Quick upload test</strong><span>Click the upload input, choose a text file, and confirm the summary changes to the exact filename you selected.</span></div>' +
+                  '<div class="stepItem"><strong>Quick download test</strong><span>Click the static TXT link, generated JSON button, or Excel-compatible XLS button and verify that the file lands in Fira’s controlled download folder during local runs.</span></div>' +
+                  '<div class="stepItem"><strong>Portable scenario check</strong><span>Record an upload once, save the scenario, and rerun it on the same machine without manually editing the step value.</span></div>' +
+                '</div>' +
+              '</div>'
+          })
+        ]
+      });
+
+      var oApp = new sap.m.App({
+        pages: [oPage]
+      });
+
+      oApp.placeAt("content");
+      window.__fileTransferDemoReady = true;
+      window.__fileTransferModel = oModel;
+    });
+  </script>
+</head>
+<body class="sapUiBody" id="content"></body>
+</html>

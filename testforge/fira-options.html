@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #e8eaed;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    gap: 48px;
+  }
+  h1 { color: #3c4043; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 48px; }
+  .item { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .icon-wrap {
+    border-radius: 36px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.1), 0 0 0 0.5px rgba(0,0,0,0.06);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .icon-wrap:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1), 0 20px 48px rgba(0,0,0,0.14), 0 0 0 0.5px rgba(0,0,0,0.06);
+  }
+  .label { color: #3c4043; font-size: 12px; font-weight: 600; }
+  .sub { color: #80868b; font-size: 11px; text-align: center; margin-top: 2px; }
+</style>
+</head>
+<body>
+<h1>Fira — Icon Options</h1>
+<div class="grid">
+
+<!-- 1: White bg, indigo F + test checkmark -->
+<div class="item">
+<div class="icon-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="160" height="160">
+  <rect width="180" height="180" fill="#ffffff"/>
+  <!-- F -->
+  <rect x="44" y="44" width="18" height="92" rx="9" fill="#4f46e5"/>
+  <rect x="44" y="44" width="72" height="18" rx="9" fill="#4f46e5"/>
+  <rect x="44" y="82" width="52" height="18" rx="9" fill="#4f46e5"/>
+  <!-- checkmark circle -->
+  <circle cx="126" cy="126" r="22" fill="#4f46e5"/>
+  <path d="M116 126 L122 132 L136 118" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
+</div>
+<div class="label">1</div>
+<div class="sub">F + checkmark</div>
+</div>
+
+<!-- 2: Light grey, geometric F, subtle gradient -->
+<div class="item">
+<div class="icon-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="160" height="160">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8faff"/>
+      <stop offset="100%" style="stop-color:#eef0f8"/>
+    </linearGradient>
+    <linearGradient id="f2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#4338ca"/>
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" fill="url(#bg2)"/>
+  <rect x="44" y="44" width="18" height="92" rx="9" fill="url(#f2)"/>
+  <rect x="44" y="44" width="72" height="18" rx="9" fill="url(#f2)"/>
+  <rect x="44" y="82" width="52" height="18" rx="9" fill="url(#f2)"/>
+  <!-- play triangle -->
+  <path d="M108 100 L134 116 L108 132 Z" fill="url(#f2)"/>
+</svg>
+</div>
+<div class="label">2</div>
+<div class="sub">F + play (run tests)</div>
+</div>
+
+<!-- 3: SAP style - white, blue abstract F -->
+<div class="item">
+<div class="icon-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="160" height="160">
+  <defs>
+    <linearGradient id="f3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0070f3"/>
+      <stop offset="100%" style="stop-color:#0050b3"/>
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" fill="#fff"/>
+  <!-- Big bold F, SAP style -->
+  <rect x="38" y="38" width="20" height="104" rx="5" fill="url(#f3)"/>
+  <rect x="38" y="38" width="80" height="20" rx="5" fill="url(#f3)"/>
+  <rect x="38" y="78" width="58" height="20" rx="5" fill="url(#f3)"/>
+  <!-- dot accent -->
+  <circle cx="132" cy="132" r="14" fill="#0070f3" opacity="0.15"/>
+  <circle cx="132" cy="132" r="8" fill="#0070f3"/>
+</svg>
+</div>
+<div class="label">3</div>
+<div class="sub">SAP Blue, minimal</div>
+</div>
+
+<!-- 4: White, stacked bars (test steps) + F -->
+<div class="item">
+<div class="icon-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="160" height="160">
+  <defs>
+    <linearGradient id="f4" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#818cf8"/>
+      <stop offset="100%" style="stop-color:#4f46e5"/>
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" fill="#fafafa"/>
+  <!-- F -->
+  <rect x="36" y="40" width="16" height="100" rx="8" fill="url(#f4)"/>
+  <rect x="36" y="40" width="68" height="16" rx="8" fill="url(#f4)"/>
+  <rect x="36" y="76" width="50" height="16" rx="8" fill="url(#f4)"/>
+  <!-- test steps bars right side -->
+  <rect x="116" y="52" width="28" height="8" rx="4" fill="#4f46e5"/>
+  <rect x="116" y="68" width="20" height="8" rx="4" fill="#4f46e5" opacity="0.5"/>
+  <rect x="116" y="84" width="24" height="8" rx="4" fill="#4f46e5" opacity="0.3"/>
+  <rect x="116" y="100" width="16" height="8" rx="4" fill="#4f46e5" opacity="0.2"/>
+  <!-- passed dot -->
+  <circle cx="130" cy="130" r="16" fill="#10b981" opacity="0.12"/>
+  <path d="M122 130 L127 135 L138 122" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
+</div>
+<div class="label">4</div>
+<div class="sub">F + test adımları</div>
+</div>
+
+<!-- 5: Light grey, bold geometric -->
+<div class="item">
+<div class="icon-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="160" height="160">
+  <defs>
+    <linearGradient id="bg5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f1f5f9"/>
+      <stop offset="100%" style="stop-color:#e2e8f0"/>
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" fill="url(#bg5)"/>
+  <!-- Bold F, dark slate -->
+  <rect x="40" y="40" width="22" height="100" rx="11" fill="#1e293b"/>
+  <rect x="40" y="40" width="80" height="22" rx="11" fill="#1e293b"/>
+  <rect x="40" y="80" width="58" height="22" rx="11" fill="#1e293b"/>
+  <!-- indigo accent line -->
+  <rect x="114" y="40" width="6" height="100" rx="3" fill="#6366f1" opacity="0.25"/>
+  <rect x="114" y="100" width="6" height="40" rx="3" fill="#6366f1"/>
+</svg>
+</div>
+<div class="label">5</div>
+<div class="sub">Dark F, light grey</div>
+</div>
+
+<!-- 6: White, rounded F, pastel indigo -->
+<div class="item">
+<div class="icon-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="160" height="160">
+  <defs>
+    <linearGradient id="bg6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="100%" style="stop-color:#f5f3ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" fill="url(#bg6)"/>
+  <!-- Rounded square card behind F -->
+  <rect x="28" y="28" width="124" height="124" rx="24" fill="#ede9fe"/>
+  <!-- F -->
+  <rect x="50" y="50" width="18" height="80" rx="9" fill="#6d28d9"/>
+  <rect x="50" y="50" width="62" height="18" rx="9" fill="#6d28d9"/>
+  <rect x="50" y="84" width="44" height="18" rx="9" fill="#6d28d9"/>
+  <!-- small check -->
+  <circle cx="120" cy="120" r="18" fill="#6d28d9"/>
+  <path d="M111 120 L117 126 L129 112" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
+</div>
+<div class="label">6</div>
+<div class="sub">Pastel violet card</div>
+</div>
+
+<!-- 7: White, SAP Fiori launchpad style -->
+<div class="item">
+<div class="icon-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="160" height="160">
+  <rect width="180" height="180" fill="#ffffff"/>
+  <!-- Background shape -->
+  <rect x="24" y="24" width="132" height="132" rx="20" fill="#f0f4ff"/>
+  <!-- Large F, centered, bold -->
+  <rect x="52" y="48" width="18" height="84" rx="6" fill="#4f46e5"/>
+  <rect x="52" y="48" width="76" height="18" rx="6" fill="#4f46e5"/>
+  <rect x="52" y="84" width="54" height="18" rx="6" fill="#4f46e5"/>
+  <!-- run icon -->
+  <circle cx="116" cy="116" r="20" fill="#4f46e5"/>
+  <path d="M109 108 L127 116 L109 124 Z" fill="white"/>
+</svg>
+</div>
+<div class="label">7</div>
+<div class="sub">Fiori launchpad stili</div>
+</div>
+
+<!-- 8: White, abstract F as building blocks -->
+<div class="item">
+<div class="icon-wrap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="160" height="160">
+  <defs>
+    <linearGradient id="b1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#4338ca"/>
+    </linearGradient>
+    <linearGradient id="b2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="b3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a78bfa"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" fill="#ffffff"/>
+  <!-- F as building blocks / modules -->
+  <rect x="40" y="40" width="36" height="36" rx="8" fill="url(#b1)"/>
+  <rect x="82" y="40" width="58" height="36" rx="8" fill="url(#b2)"/>
+  <rect x="40" y="82" width="36" height="36" rx="8" fill="url(#b1)"/>
+  <rect x="82" y="82" width="36" height="36" rx="8" fill="url(#b3)" opacity="0.5"/>
+  <rect x="40" y="124" width="36" height="16" rx="8" fill="url(#b1)"/>
+</svg>
+</div>
+<div class="label">8</div>
+<div class="sub">F as modules (Tosca)</div>
+</div>
+
+</div>
+</body>
+</html>

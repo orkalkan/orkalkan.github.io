@@ -1,0 +1,3 @@
+Fira sample download
+This file is intentionally simple and deterministic.
+Use it to validate static-link download recording and runtime handling.

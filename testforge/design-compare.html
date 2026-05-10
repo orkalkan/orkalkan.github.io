@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sidebar Comparison</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: "Inter", -apple-system, sans-serif; background: #1c1c1e; display: flex; flex-direction: column; height: 100vh; }
+.labels { display: flex; gap: 12px; padding: 16px 20px 8px; }
+.label { flex: 1; text-align: center; font-size: 15px; font-weight: 600; color: #fff; letter-spacing: -.01em; }
+.frames { display: flex; gap: 12px; flex: 1; padding: 0 20px 20px; }
+iframe { flex: 1; border: none; border-radius: 14px; }
+</style>
+</head>
+<body>
+<div class="labels">
+  <div class="label">Widget Sidebar</div>
+  <div class="label">Transparent Sidebar</div>
+</div>
+<div class="frames">
+  <iframe src="/design-preview-widget.html"></iframe>
+  <iframe src="/design-preview.html"></iframe>
+</div>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fira Dashboard (Pixel Perfect)</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+  background: radial-gradient(circle at 20% 0%, #ffffff, #eef2f7);
+  color:#1f2937;
+}
+
+/* Layout */
+.app{display:flex;height:100vh}
+
+/* Sidebar */
+.sidebar{
+  width:240px;
+  padding:24px;
+  background:rgba(255,255,255,0.7);
+  backdrop-filter: blur(14px);
+  border-right:1px solid #e5e7eb;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:600;
+  margin-bottom:30px;
+}
+
+.logo-box{
+  width:32px;height:32px;
+  border-radius:8px;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+}
+
+.nav-item{
+  padding:10px 12px;
+  border-radius:10px;
+  font-size:14px;
+  color:#6b7280;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+}
+
+.nav-item.active{
+  background:#eef2ff;
+  color:#6366f1;
+  font-weight:500;
+}
+
+.nav-item:hover{background:#f3f4f6}
+
+/* Content */
+.content{flex:1;padding:32px}
+
+/* Header */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:24px;
+}
+
+.btn{
+  padding:10px 18px;
+  border-radius:12px;
+  border:none;
+  color:white;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  box-shadow:0 6px 18px rgba(99,102,241,0.4);
+  cursor:pointer;
+  transition:0.2s;
+}
+.btn:hover{transform:scale(1.05)}
+
+/* Cards */
+.grid{display:grid;gap:20px}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-3{grid-template-columns:2fr 1fr}
+.grid-2{grid-template-columns:1fr 1fr}
+
+.card{
+  background:rgba(255,255,255,0.75);
+  backdrop-filter: blur(12px);
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.06);
+  transition:0.2s;
+}
+.card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 32px rgba(0,0,0,0.08);
+}
+
+/* Metrics */
+.metric-value{font-size:30px;font-weight:600}
+.metric-label{font-size:13px;color:#6b7280}
+
+/* Chart */
+.bar-chart{
+  display:flex;
+  align-items:flex-end;
+  gap:10px;
+  height:180px;
+}
+.bar{
+  flex:1;
+  background:linear-gradient(to top,#22c55e,#4ade80);
+  border-radius:6px 6px 0 0;
+}
+
+/* Donut */
+.donut{
+  width:140px;height:140px;
+}
+.donut text{
+  font-size:22px;
+  font-weight:600;
+  fill:#111827;
+}
+
+/* List */
+.list{display:flex;flex-direction:column;gap:14px;font-size:14px}
+.row{display:flex;justify-content:space-between}
+
+/* Progress */
+.progress{
+  height:6px;background:#e5e7eb;border-radius:6px;margin-top:4px
+}
+.progress-inner{
+  height:6px;border-radius:6px
+}
+.green{background:#22c55e}
+.yellow{background:#f59e0b}
+.red{background:#ef4444}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logo-box"></div>
+      Fira
+    </div>
+
+    <div class="nav-item active">Dashboard</div>
+    <div class="nav-item">Modules</div>
+    <div class="nav-item">Scenarios</div>
+    <div class="nav-item">Record</div>
+
+    <div class="nav-item">
+      Runs <span style="background:#ef4444;color:white;padding:2px 6px;border-radius:10px;font-size:12px">1</span>
+    </div>
+
+    <div class="nav-item">Reports</div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Header -->
+    <div class="header">
+      <h2>Dashboard</h2>
+      <button class="btn">Run All</button>
+    </div>
+
+    <!-- Metrics -->
+    <div class="grid grid-4">
+
+      <div class="card">
+        <div class="metric-value">92%</div>
+        <div class="metric-label">Pass Rate</div>
+      </div>
+
+      <div class="card">
+        <div class="metric-value">24</div>
+        <div class="metric-label">Modules</div>
+      </div>
+
+      <div class="card">
+        <div class="metric-value">12</div>
+        <div class="metric-label">Scenarios</div>
+      </div>
+
+      <div class="card">
+        <div class="metric-value">148</div>
+        <div class="metric-label">Total Runs</div>
+      </div>
+
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-3" style="margin-top:20px">
+
+      <!-- Bar Chart -->
+      <div class="card">
+        <div style="margin-bottom:10px;font-weight:500">Run Trend</div>
+
+        <div class="bar-chart">
+          <div class="bar" style="height:60px"></div>
+          <div class="bar" style="height:90px"></div>
+          <div class="bar" style="height:140px"></div>
+          <div class="bar" style="height:80px"></div>
+          <div class="bar" style="height:120px"></div>
+        </div>
+      </div>
+
+      <!-- Donut -->
+      <div class="card" style="display:flex;justify-content:center;align-items:center">
+
+        <svg class="donut" viewBox="0 0 42 42">
+          <circle cx="21" cy="21" r="15.915"
+            fill="transparent"
+            stroke="#e5e7eb"
+            stroke-width="4"/>
+
+          <circle cx="21" cy="21" r="15.915"
+            fill="transparent"
+            stroke="#22c55e"
+            stroke-width="4"
+            stroke-dasharray="92 100"
+            stroke-linecap="round"/>
+
+          <text x="50%" y="50%" text-anchor="middle" dy=".3em">92%</text>
+        </svg>
+
+      </div>
+
+    </div>
+
+    <!-- Bottom -->
+    <div class="grid grid-2" style="margin-top:20px">
+
+      <!-- Recent -->
+      <div class="card">
+        <div style="margin-bottom:10px;font-weight:500">Recent Runs</div>
+
+        <div class="list">
+          <div class="row"><span>Shopping Cart</span><span style="color:#22c55e">Passed</span></div>
+          <div class="row"><span>Search</span><span style="color:#ef4444">Failed</span></div>
+          <div class="row"><span>Checkout</span><span style="color:#22c55e">Passed</span></div>
+        </div>
+      </div>
+
+      <!-- Flakiness -->
+      <div class="card">
+        <div style="margin-bottom:10px;font-weight:500">Flakiness</div>
+
+        <div>
+          Add to Cart
+          <div class="progress"><div class="progress-inner green" style="width:92%"></div></div>
+        </div>
+
+        <div style="margin-top:10px">
+          Search
+          <div class="progress"><div class="progress-inner yellow" style="width:70%"></div></div>
+        </div>
+
+        <div style="margin-top:10px">
+          Login
+          <div class="progress"><div class="progress-inner red" style="width:50%"></div></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
